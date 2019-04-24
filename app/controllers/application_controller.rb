@@ -6,4 +6,7 @@ class ApplicationController < ActionController::Base
       username == ENV.fetch('ADMIN_NAME') && password == ENV.fetch('ADMIN_PASSWORD')
     end
   end
+
+  def main_page
+  end
 end
