@@ -9,4 +9,14 @@ class ApplicationController < ActionController::Base
 
   def main_page
   end
+
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[organisation_name email password password_confirmation])
+    devise_parameter_sanitizer.permit(:sign_in, keys: %i[email password remember_me])
+  end
+
 end
