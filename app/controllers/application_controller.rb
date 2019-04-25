@@ -7,9 +7,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def main_page
-  end
-
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
