@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'database_cleaner'
-
-DatabaseCleaner.strategy = :truncation
-DatabaseCleaner.start
 
 RSpec.describe 'UserAuthorizations', type: :feature do
   let!(:user1) { FactoryBot.create(:user) }
@@ -42,5 +38,3 @@ RSpec.describe 'UserAuthorizations', type: :feature do
     end
   end
 end
-
-DatabaseCleaner.clean

@@ -1,8 +1,4 @@
 require 'rails_helper'
-require 'database_cleaner'
-
-DatabaseCleaner.strategy = :truncation
-DatabaseCleaner.start
 
 RSpec.describe User, type: :model do
   user_data = FactoryBot.build(:user)
@@ -19,7 +15,7 @@ RSpec.describe User, type: :model do
   end
 
   context 'some fields sre incorrect' do
-    it 'isn\'t valid w/o org name' do
+    it "isn't valid w/o org name" do
       user = described_class.new
       user.email = user_data.email
       user.organisation_name = ''
@@ -28,7 +24,7 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
-    it 'isn\'t valid w/o email' do
+    it "isn't valid w/o email" do
       user = described_class.new
       user.email = ''
       user.organisation_name = user_data.organisation_name
@@ -37,7 +33,7 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
-    it 'isn\'t valid w/o password' do
+    it "isn't valid w/o password" do
       user = described_class.new
       user.email = user_data.email
       user.organisation_name = user_data.organisation_name
@@ -46,7 +42,7 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
-    it 'isn\'t valid w/o password confirmation' do
+    it "isn't valid w/o password confirmation" do
       user = described_class.new
       user.email = user_data.email
       user.organisation_name = user_data.organisation_name
@@ -56,5 +52,3 @@ RSpec.describe User, type: :model do
     end
   end
 end
-
-DatabaseCleaner.clean
