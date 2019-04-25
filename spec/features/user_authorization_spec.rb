@@ -28,7 +28,7 @@ RSpec.describe 'UserAuthorizations', type: :feature do
         fill_in 'user_password', with: 'random_word'
       end
       click_button 'Log in'
-      expect(page).to have_text 'Log in'
+      expect(current_path).to eql '/users/sign_in'
     end
 
     it 'can not log in when fields are empty' do
@@ -38,7 +38,7 @@ RSpec.describe 'UserAuthorizations', type: :feature do
         fill_in 'user_password', with: ''
       end
       click_button 'Log in'
-      expect(page).to have_text 'Log in'
+      expect(current_path).to eql '/users/sign_in'
     end
   end
 end

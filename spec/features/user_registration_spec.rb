@@ -45,7 +45,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password_confirmation', with: user2.password_confirmation
       end
       click_button 'Sign up'
-      expect(page).to have_text 'Sign up'
+      expect(page).to have_text 'can\'t be blank'
     end
 
     it 'has empty password field' do
@@ -57,7 +57,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password_confirmation', with: user2.password_confirmation
       end
       click_button 'Sign up'
-      expect(page).to have_text 'Sign up'
+      expect(page).to have_text 'can\'t be blank'
     end
 
     it 'has empty password confirmation field' do
@@ -69,7 +69,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password_confirmation', with: ''
       end
       click_button 'Sign up'
-      expect(page).to have_text 'Sign up'
+      expect(page).to have_text 'can\'t be blank'
     end
   end
 end
