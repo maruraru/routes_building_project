@@ -6,7 +6,7 @@
         <input name="address_search" id="address_search" type="text"/>
         <button onclick="return addField()">Добавить точку маршрута</button>
         <hr/>
-        <%= submit_tag("Построить маршрут" , onclick: "return sendLengthMatrix();" ) %>
+        <%= submit_tag("Построить маршрут" , onclick: "event.preventDefault(); sendLengthMatrix();" ) %>
       <% end %>
     </div>
     <div class="col-lg-8">

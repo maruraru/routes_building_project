@@ -60,12 +60,6 @@ function create_placemark(address) {
 
 //Формирование матрицы расстояний и отправка данных
 function sendLengthMatrix() {
-    let inputForm = document.getElementById('address_input');
-    let input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key; // 'the key/name of the attribute/field that is sent to the server
-    input.value = value;
-    theForm.appendChild(input);
     let addresses = document.getElementsByClassName('address_item');
     let addressesMatrix = [];
     let promises = [];
@@ -78,11 +72,23 @@ function sendLengthMatrix() {
     });
     Promise.all(promises).then(() => {
         console.log("final result = " + addressesMatrix);
+        let inputForm = document.getElementById('address_input');
+        buildInHiddenInput(inputForm,'length_matrix', addressesMatrix);
+        inputForm.submit();
         return true;
     },
     () => {
         return false;
     })
+}
+
+//Встраивание матрицы в хиддент-поле формы
+function buildInHiddenInput(inputForm, key, data) {
+    let input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key; // 'the key/name of the attribute/field that is sent to the server
+    input.value = JSON.stringify(data);
+    inputForm.appendChild(input);
 }
 
 //Получуние длины маршрута между двумя адресами
