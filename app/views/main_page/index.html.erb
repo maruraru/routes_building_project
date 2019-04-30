@@ -2,11 +2,11 @@
   <div class="row">
     <div class="col-lg-4">
       <span>Введите адрес:</span>
-      <%= form_with :id => 'address_input' do %>
+      <%= form_with id: 'address_input' do %>
         <input name="address_search" id="address_search" type="text"/>
         <button onclick="return addField()">Добавить точку маршрута</button>
         <hr/>
-        <%= submit_tag("Построить маршрут") %>
+        <%= submit_tag("Построить маршрут" , onclick: "return sendLengthMatrix();" ) %>
       <% end %>
     </div>
     <div class="col-lg-8">

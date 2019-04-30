@@ -57,3 +57,66 @@ function create_placemark(address) {
         }
     );
 }
+
+//Формирование матрицы расстояний и отправка данных
+function sendLengthMatrix() {
+    let inputForm = document.getElementById('address_input');
+    let input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key; // 'the key/name of the attribute/field that is sent to the server
+    input.value = value;
+    theForm.appendChild(input);
+    let addresses = document.getElementsByClassName('address_item');
+    let addressesMatrix = [];
+    let promises = [];
+    Array.from(addresses).forEach(function (sourceAddress, indexSource) {
+        addressesMatrix[indexSource] = [];
+        Array.from(addresses).forEach(function (destinationAddress, indexDest) {
+            promises.push(getRouteLength(sourceAddress.firstChild.innerText, destinationAddress.firstChild.innerText,
+                indexSource, indexDest, addressesMatrix));
+       })
+    });
+    Promise.all(promises).then(() => {
+        console.log("final result = " + addressesMatrix);
+        return true;
+    },
+    () => {
+        return false;
+    })
+}
+
+//Получуние длины маршрута между двумя адресами
+function getRouteLength(addressFrom, addressTo, indexFrom, indexTo, resultArray) {
+    let coordinates = [];
+    return new Promise(function (resolve, reject) {
+        if (indexFrom === indexTo) {
+            resultArray[indexFrom][indexTo] = Infinity;
+            resolve();
+        }
+        else {
+            ymaps.geocode(addressFrom)
+                .then(function (res) {
+                    coordinates.push(res.geoObjects.get(0).geometry.getCoordinates());
+                })
+                .then(() => ymaps.geocode(addressTo))
+                .then(res => coordinates[1] = res.geoObjects.get(0).geometry.getCoordinates())
+                .then(() => {
+                    let multiRoute = new ymaps.multiRouter.MultiRoute({
+                        // Описание опорных точек мультимаршрута.
+                        referencePoints: coordinates,
+                        // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
+                        boundsAutoApply: true
+                    });
+                    multiRoute.model.events.add("requestsuccess", function (event) {
+                        var routes = event.get("target")
+                            .getRoutes();
+                        resultArray[indexFrom][indexTo] = routes[0].properties.get("distance").text;
+                        resolve();
+                    });
+                }).catch ((error) => {
+                console.log('Error: ', error);
+                reject();
+            });
+        }
+    });
+}
