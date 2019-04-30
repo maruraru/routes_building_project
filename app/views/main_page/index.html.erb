@@ -1,1 +1,19 @@
-<h1>Future main page</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-4">
+      <span>Введите адрес:</span>
+      <%= form_with :id => 'address_input' do %>
+        <input name="address_search" id="address_search" type="text"/>
+        <button onclick="return addField()">Добавить точку маршрута</button>
+        <hr/>
+        <%= submit_tag("Построить маршрут") %>
+      <% end %>
+    </div>
+    <div class="col-lg-8">
+      <div id="map" class="map"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12"></div>
+  </div>
+</div>
