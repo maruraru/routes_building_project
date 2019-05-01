@@ -2,32 +2,50 @@ module RouteBuilding
 
   def build_route(distances_matrix)
     route = []
-    matrix_casting distances_matrix
     while get_row_number(distances_matrix) >= 2
+      matrix_casting distances_matrix
       path = find_part_of_path distances_matrix
+      puts path
       route << path
-      remove_row_and_col(distances_matrix, path[0],path[1])
+      distances_matrix = remove_row_and_col(distances_matrix, path[0], path[1])
       remove_inverted_path(distances_matrix, path[1], path[0])
     end
     route << get_closing_path(distances_matrix)
-    route.sort
+    route
   end
 
   private
 
   def matrix_casting(distances_matrix)
+    is_casted = false
+    distances_matrix.each do |row|
+      if row.include?(0)
+        is_casted = true
+        break
+      end
+    end
+    return if is_casted
+
     distances_matrix.each do |row|
       min = row.min
+      raise ArgumentError if min == Float::INFINITY
+    rescue ArgumentError
+      puts 'empty row'
+    else
       row.map! do |elem|
         elem - min
       end
     end
     distances_matrix.transpose.each do |row|
       min = row.min
+      raise ArgumentError if min == Float::INFINITY
+    rescue ArgumentError
+      puts 'empty col'
+    else
       row.map! do |elem|
         elem - min
       end
-    end.transpose
+    end
   end
 
   def find_min_except(vector, index_except)
@@ -60,9 +78,7 @@ module RouteBuilding
   def get_closing_path(distances_matrix)
     distances_matrix.each_with_index do |row, i|
       row.each_with_index do |elem, j|
-        unless elem == Float::INFINITY
-          return [i,j]
-        end
+        return [i,j] unless elem == Float::INFINITY
       end
     end
   end
@@ -71,7 +87,7 @@ module RouteBuilding
     distances_matrix[row_index].map! do |elem|
       Float::INFINITY
     end
-    distances_matrix = distances_matrix.each do |row|
+    distances_matrix.each do |row|
       row[col_index] = Float::INFINITY
     end
   end
@@ -83,9 +99,7 @@ module RouteBuilding
   def get_row_number(distances_matrix)
     rows = 0
     distances_matrix.each do |row|
-      unless row - [Float::INFINITY] == []
-        rows += 1
-      end
+      rows += 1 unless row - [Float::INFINITY] == []
     end
     rows
   end
