@@ -61,19 +61,26 @@ function create_placemark(address) {
 //Формирование матрицы расстояний и отправка данных
 function sendLengthMatrix() {
     let addresses = document.getElementsByClassName('address_item');
+    if (addresses.length === 0) return false;
     let addressesMatrix = [];
+    let addressesArray = [];
     let promises = [];
     Array.from(addresses).forEach(function (sourceAddress, indexSource) {
         addressesMatrix[indexSource] = [];
+        let source = sourceAddress.innerText;
+        source = source.substring(0, source.length - 3);
+        addressesArray[indexSource] = source;
         Array.from(addresses).forEach(function (destinationAddress, indexDest) {
-            promises.push(getRouteLength(sourceAddress.firstChild.innerText, destinationAddress.firstChild.innerText,
-                indexSource, indexDest, addressesMatrix));
+            let dest = destinationAddress.innerText;
+            dest = dest.substring(0, dest.length - 3);
+            promises.push(getRouteLength(source, dest, indexSource, indexDest, addressesMatrix));
        })
     });
     Promise.all(promises).then(() => {
         console.log("final result = " + addressesMatrix);
         let inputForm = document.getElementById('address_input');
         buildInHiddenInput(inputForm,'length_matrix', addressesMatrix);
+        buildInHiddenInput(inputForm,'address_array', addressesArray);
         inputForm.submit();
         return true;
     },

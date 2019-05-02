@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
 module RouteBuilding
 
   def build_route(distances_matrix)
     route = []
+    if get_row_number(distances_matrix) <= 2
+      return get_closing_path distances_matrix
+    end
+
     while get_row_number(distances_matrix) >= 2
       matrix_casting distances_matrix
       path = find_part_of_path distances_matrix
@@ -11,10 +17,8 @@ module RouteBuilding
       remove_inverted_path(distances_matrix, path[1], path[0])
     end
     route << get_closing_path(distances_matrix)
-    route
+    make_sequence route
   end
-
-  private
 
   def matrix_casting(distances_matrix)
     is_casted = false
@@ -62,14 +66,12 @@ module RouteBuilding
     destination = 0
     distances_matrix.each_with_index do |row, i|
       row.each_with_index do |elem, j|
-        if elem == 0
-          d = find_min_except(row, j) + find_min_except(distances_matrix.transpose[j],i)
-          if d > max
-            max = d
-            source = i
-            destination = j
-          end
-        end
+        next unless elem == 0
+        d = find_min_except(row, j) + find_min_except(distances_matrix.transpose[j],i)
+        next unless d > max
+        max = d
+        source = i
+        destination = j
       end
     end
     [source, destination]
@@ -84,7 +86,7 @@ module RouteBuilding
   end
 
   def remove_row_and_col(distances_matrix, row_index, col_index)
-    distances_matrix[row_index].map! do |elem|
+    distances_matrix[row_index].map! do |_elem|
       Float::INFINITY
     end
     distances_matrix.each do |row|
@@ -102,6 +104,49 @@ module RouteBuilding
       rows += 1 unless row - [Float::INFINITY] == []
     end
     rows
+  end
+
+  def make_sequence (route_pairs)
+    result = Array.new(route_pairs.length)
+    result[0] = 0
+    for i in 1..route_pairs.length-1
+      result[i] = route_pairs.assoc(result[i-1])[1]
+    end
+    result
+  end
+
+  def make_address_sequence(route, addresses)
+    return addresses if route.length == 1
+
+    result = Array.new(route.length)
+    route.each_with_index do |elem, index|
+      result[index] = addresses[elem]
+    end
+    result
+  end
+
+  def parse_length_matrix(params)
+    length_matrix = JSON.parse params[:length_matrix]
+    length_matrix.map! do |row|
+      row.map! do |elem|
+        if elem.nil?
+          Float::INFINITY
+        else
+          parse_length_string_to_meters elem
+        end
+      end
+    end
+  end
+
+  def parse_length_string_to_meters(string)
+    regex = /(?<length>\d+)(,(?<dot>\d))?.(?<measure>(км|м))/
+    if (res = string.match regex)
+      if res['measure'] == 'км'
+        res['length'].to_i * 1000 + res['dot'].to_i * 100
+      else
+        res['length'].to_i
+      end
+    end
   end
 
 end
