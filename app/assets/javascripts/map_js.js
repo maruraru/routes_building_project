@@ -23,5 +23,24 @@ function init(){
             width: 300, // Ширина панели подсказок
             results: 3, // Максимальное количество показываемых подсказок.
         });
-}
 
+    let addresses = document.getElementsByClassName('address_item');
+    if (addresses.length !== 0) {
+        let addressesArray = [];
+        Array.from(addresses).forEach(function (sourceAddress, indexSource) {
+            let text = sourceAddress.innerText;
+            addressesArray[indexSource] = text.substring(0, text.length - 3);
+        });
+        addressesArray[addressesArray.length] = addressesArray[0];
+        console.log(addressesArray);
+        let multiRoute = new ymaps.multiRouter.MultiRoute({
+            // Описание опорных точек мультимаршрута.
+            referencePoints: addressesArray,
+            // Параметры маршрутизации.
+            params: {
+                boundsAutoApply: true
+            }
+        });
+        myMap.geoObjects.add(multiRoute);
+    }
+}

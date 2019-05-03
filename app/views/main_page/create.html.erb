@@ -3,10 +3,18 @@
     <div class="col-lg-4">
       <span>Введите адрес:</span>
       <%= form_with id: 'address_input' do %>
-        <input class="address_search" name="address_search" id="address_search" type="text"/>
-        <button name="add-point" value="add-point" onclick="return addField()">Добавить точку маршрута</button>
+        <input name="address_search" id="address_search" type="text"/>
+        <button value="add-point" onclick="return addField()">Добавить точку маршрута</button>
         <hr/>
         <%= submit_tag("Построить маршрут" , onclick: "event.preventDefault(); sendLengthMatrix();" ) %>
+      <% end %>
+      <% if @result %>
+        <span>Маршрут построен</span>
+        <% @result.each do |elem| %>
+          <div class="address_item">
+            <span><%=elem%></span> <a onclick="return deleteField(this)" href="#">[X]</a>
+          </div>
+        <% end %>
       <% end %>
     </div>
     <div class="col-lg-8">

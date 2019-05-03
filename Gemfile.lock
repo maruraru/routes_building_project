@@ -79,6 +79,9 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.2)
       xpath (~> 3.2)
+    capybara-selenium (0.0.6)
+      capybara
+      selenium-webdriver
     childprocess (1.0.1)
       rake (< 13.0)
     chromedriver-helper (2.1.1)
@@ -172,6 +175,7 @@ GEM
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
+    pg (1.1.4)
     public_suffix (3.0.3)
     puma (3.12.1)
     rack (2.0.7)
@@ -293,6 +297,7 @@ DEPENDENCIES
   bootstrap-sass (~> 3.2.0)
   byebug
   capybara (>= 2.15)
+  capybara-selenium
   chromedriver-helper
   coffee-rails (~> 4.2)
   database_cleaner
@@ -303,6 +308,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   jquery-rails
   listen (>= 3.0.5, < 3.2)
+  pg
   puma (~> 3.11)
   rails (~> 5.2.3)
   rspec-rails (~> 3.8)

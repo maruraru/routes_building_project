@@ -57,3 +57,79 @@ function create_placemark(address) {
         }
     );
 }
+
+//Формирование матрицы расстояний и отправка данных
+function sendLengthMatrix() {
+    let addresses = document.getElementsByClassName('address_item');
+    if (addresses.length === 0) return false;
+    let addressesMatrix = [];
+    let addressesArray = [];
+    let promises = [];
+    Array.from(addresses).forEach(function (sourceAddress, indexSource) {
+        addressesMatrix[indexSource] = [];
+        let source = sourceAddress.innerText;
+        source = source.substring(0, source.length - 3);
+        addressesArray[indexSource] = source;
+        Array.from(addresses).forEach(function (destinationAddress, indexDest) {
+            let dest = destinationAddress.innerText;
+            dest = dest.substring(0, dest.length - 3);
+            promises.push(getRouteLength(source, dest, indexSource, indexDest, addressesMatrix));
+       })
+    });
+    Promise.all(promises).then(() => {
+        console.log("final result = " + addressesMatrix);
+        let inputForm = document.getElementById('address_input');
+        buildInHiddenInput(inputForm,'length_matrix', addressesMatrix);
+        buildInHiddenInput(inputForm,'address_array', addressesArray);
+        inputForm.submit();
+        return true;
+    },
+    () => {
+        return false;
+    })
+}
+
+//Встраивание матрицы в хиддент-поле формы
+function buildInHiddenInput(inputForm, key, data) {
+    let input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key; // 'the key/name of the attribute/field that is sent to the server
+    input.value = JSON.stringify(data);
+    inputForm.appendChild(input);
+}
+
+//Получуние длины маршрута между двумя адресами
+function getRouteLength(addressFrom, addressTo, indexFrom, indexTo, resultArray) {
+    let coordinates = [];
+    return new Promise(function (resolve, reject) {
+        if (indexFrom === indexTo) {
+            resultArray[indexFrom][indexTo] = Infinity;
+            resolve();
+        }
+        else {
+            ymaps.geocode(addressFrom)
+                .then(function (res) {
+                    coordinates.push(res.geoObjects.get(0).geometry.getCoordinates());
+                })
+                .then(() => ymaps.geocode(addressTo))
+                .then(res => coordinates[1] = res.geoObjects.get(0).geometry.getCoordinates())
+                .then(() => {
+                    let multiRoute = new ymaps.multiRouter.MultiRoute({
+                        // Описание опорных точек мультимаршрута.
+                        referencePoints: coordinates,
+                        // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
+                        boundsAutoApply: true
+                    });
+                    multiRoute.model.events.add("requestsuccess", function (event) {
+                        var routes = event.get("target")
+                            .getRoutes();
+                        resultArray[indexFrom][indexTo] = routes[0].properties.get("distance").text;
+                        resolve();
+                    });
+                }).catch ((error) => {
+                console.log('Error: ', error);
+                reject();
+            });
+        }
+    });
+}
