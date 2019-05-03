@@ -2,7 +2,8 @@
 
 module RouteBuilding
 
-  def build_route(distances_matrix)
+  def build_route(params)
+    distances_matrix = parse_length_matrix(params)
     route = []
     if get_row_number(distances_matrix) <= 2
       return get_closing_path distances_matrix
@@ -11,13 +12,12 @@ module RouteBuilding
     while get_row_number(distances_matrix) >= 2
       matrix_casting distances_matrix
       path = find_part_of_path distances_matrix
-      puts path
       route << path
       distances_matrix = remove_row_and_col(distances_matrix, path[0], path[1])
       remove_inverted_path(distances_matrix, path[1], path[0])
     end
     route << get_closing_path(distances_matrix)
-    make_sequence route
+    make_address_sequence route, JSON.parse(params[:address_array])
   end
 
   def matrix_casting(distances_matrix)
@@ -106,18 +106,14 @@ module RouteBuilding
     rows
   end
 
-  def make_sequence (route_pairs)
-    result = Array.new(route_pairs.length)
-    result[0] = 0
+  def make_address_sequence(route_pairs, addresses)
+    return addresses if route_pairs.length == 1
+
+    route = Array.new(route_pairs.length)
+    route[0] = 0
     for i in 1..route_pairs.length-1
-      result[i] = route_pairs.assoc(result[i-1])[1]
+      route[i] = route_pairs.assoc(route[i-1])[1]
     end
-    result
-  end
-
-  def make_address_sequence(route, addresses)
-    return addresses if route.length == 1
-
     result = Array.new(route.length)
     route.each_with_index do |elem, index|
       result[index] = addresses[elem]

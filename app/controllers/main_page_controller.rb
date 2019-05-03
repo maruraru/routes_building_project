@@ -11,9 +11,7 @@ class MainPageController < ActionController::Base
   rescue ActionController::ParameterMissing
     render plain: 'Адрес не введен'
   else
-    addresses = JSON.parse params[:address_array]
-    @result = make_address_sequence(build_route(parse_length_matrix(params)), addresses)
-    puts @result
+    @result = build_route(params)
   end
 
 end
