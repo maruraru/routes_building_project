@@ -1,26 +1,59 @@
-<h2>Log in</h2>
-
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+<style>
+@import url('https://fonts.googleapis.com/css?family=PT+Sans|Roboto+Condensed&display=swap');
+</style> 
+<div class="container">
+<div class="big-bg">
+  <div class="row justify-content-center" style="margin: 0">
+    <div class="card card-info">
+      <h2 class="card-title">
+        <a class="text-white" href="/">Построение кольцевых маршрутов</a>
+      </h2>
+      <div class="card-body">
+        <div class="card-text text-white roboto-text">
+          <p>✓ Специально для доставки еды!</p>
+          <p>✓ До 10 точек маршрута</p>
+          <p>✓ Персональная настройка</p>
+          <p>✓ Оптимизация маршрута</p>
+        </div>
+      </div>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
   </div>
-<% end %>
+</div>
+  <div class="row mt-5">
+    <div class="">
+      <div class="card text-white bg-primary mb-3 mt-5" style="width: 30rem">
+        <div class="card-header">
+          <h2 class="cad-title">Вход в аккаунт</h2>
+        </div>
+        <div class="card-body">
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <%= render "devise/shared/error_messages", resource: resource %>
 
-<%= render "devise/shared/links" %>
+            <div class="field">
+              <%= f.label :email %><br />
+              <%= f.email_field :email, class: 'form-control'%>
+            </div>
+          
+            <div class="field">
+              <%= f.label :password, 'Пароль' %><br />
+              <%= f.password_field :password, class: 'form-control' %>
+            </div>
+            <% if devise_mapping.rememberable? %>
+              <div class="field">
+                <%= f.check_box :remember_me %>
+                <%= f.label :remember_me, 'Запомнить меня' %>
+              </div>
+            <% end %>
+            <div class="row justify-content-center">
+              <%= f.submit "Вход", class: "btn btn-success mt-3" %>
+            </div>
+            
+          <% end %>
+        </div>
+      </div>  
+      <div>
+        <%= link_to 'Нет аккаунта? Пройдите регистрацию', new_user_registration_path, :class => 'nav-link' %>
+      </div>
+    </div>
+  </div>
+</div>

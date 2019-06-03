@@ -11,6 +11,11 @@ function deleteField(a) {
     // Возвращаем false, чтобы не было перехода по сслыке
     return false;
 }
+
+function clearAll() {
+    window.location.reload(false); 
+}
+
 function addField() {
     // Проверяем, не достигло ли число полей максимума
     if (countOfFields >= maxFieldLimit) {
@@ -23,11 +28,12 @@ function addField() {
     curFieldNameId++;
     // Создаем элемент ДИВ
     var div = document.createElement("div");
-    div.className = 'address_item';
+    div.className = 'alert alert-success address_item';
     // Добавляем HTML-контент с пом. свойства innerHTML
-    div.innerHTML = "<span>" + document.getElementById("address_search").value + "</span> <a onclick='return deleteField(this)' href='#'>[X]</a>";
+    div.innerHTML = "<span>" + document.getElementById("address_search").value + 
+        "</span> <a class='btn text-warning btn-sm' onclick='return deleteField(this)' href='#'>✖</a>";
     // Добавляем новый узел в конец списка полей
-    document.getElementById("address_input").appendChild(div);
+    $("#addresses").append(div);
     // Возвращаем false, чтобы не было перехода по сслыке
     create_placemark(document.getElementById("address_search").value);
     return false;
@@ -68,11 +74,11 @@ function sendLengthMatrix() {
     Array.from(addresses).forEach(function (sourceAddress, indexSource) {
         addressesMatrix[indexSource] = [];
         let source = sourceAddress.innerText;
-        source = source.substring(0, source.length - 3);
+        source = source.substring(0, source.length - 1);
         addressesArray[indexSource] = source;
         Array.from(addresses).forEach(function (destinationAddress, indexDest) {
             let dest = destinationAddress.innerText;
-            dest = dest.substring(0, dest.length - 3);
+            dest = dest.substring(0, dest.length - 1);
             promises.push(getRouteLength(source, dest, indexSource, indexDest, addressesMatrix));
        })
     });

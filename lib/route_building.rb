@@ -5,10 +5,6 @@ module RouteBuilding
   def build_route(params)
     distances_matrix = parse_length_matrix(params)
     route = []
-    if get_row_number(distances_matrix) <= 2
-      return get_closing_path distances_matrix
-    end
-
     while get_row_number(distances_matrix) >= 2
       matrix_casting distances_matrix
       path = find_part_of_path distances_matrix
@@ -107,7 +103,7 @@ module RouteBuilding
   end
 
   def make_address_sequence(route_pairs, addresses)
-    return addresses if route_pairs.length == 1
+    return addresses if route_pairs.length == 2
 
     route = Array.new(route_pairs.length)
     route[0] = 0

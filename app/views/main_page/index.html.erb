@@ -1,19 +1,61 @@
-<div class="container-fluid">
+<div class="container-fluid main-container">
   <div class="row">
-    <div class="col-lg-4">
-      <span>Введите адрес:</span>
-      <%= form_with id: 'address_input' do %>
-        <input class="address_search" name="address_search" id="address_search" type="text"/>
-        <button name="add-point" value="add-point" onclick="return addField()">Добавить точку маршрута</button>
-        <hr/>
-        <%= submit_tag("Построить маршрут" , onclick: "event.preventDefault(); sendLengthMatrix();" ) %>
-      <% end %>
+    <div class="col-lg-4" style='padding:0' >
+      <div class="card border-secondary mb-3 side-panel"> 
+        <div class="card-header">
+                   
+        </div>        
+        <div class="card-body">
+          <%= form_with id: 'address_input' do %>
+          <button class="btn btn-primary" name="add-point" value="add-point" onclick="return addField()">Добавить точку маршрута</button>
+          <input class="form-control" name="address_search" id="address_search" type="text" placeholder="Начните вводить адрес здесь" />
+          <hr/>
+          
+          <div class="card-text" id='addresses'>
+            <% if @result %>
+              <% @result.each do |elem| %>
+                <div class="alert alert-success address_item">
+                  <span><%=elem%></span> <a class='btn text-warning btn-sm' onclick='return deleteField(this)' href='#'>✖</a>
+                </div>
+              <% end %>
+            <% elsif user_signed_in? && current_user.location %>
+              <div class="alert alert-success address_item">
+                  <span><%=current_user.location%></span> <a class='btn text-warning btn-sm' onclick='alert("Чтобы навсегда изменить или убрать начальный адрес, перейдите на страницу настроек аккаунта и введите новое значение.");return  deleteField(this)' href='#'>★</a>
+                </div>
+            <% end %>
+          </div>
+          <hr/>
+          <h4 class="card-title text-warning">Опции:</h4>
+          <div class="card-text">
+            <div class="form-check">
+              <label class="form-check-label text-warning">
+                <input class="form-check-input" type="checkbox" id="with_traffic"  checked>
+                Учитывать дорожную ситуацию (пробки)
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label text-warning">
+                <input class="form-check-input" type="checkbox" id="mat_time_check" >
+                Задать максимальное время:
+              </label>
+            <input class="text-warning" style="border: none" type="time" id="max_time_value" name="max_time_value" min="0:30" max="3:00">
+            </div>
+            
+          </div>
+          <hr/>
+          <%= submit_tag("Построить маршрут" , onclick: "event.preventDefault(); sendLengthMatrix();" , class: "btn btn-success") %>
+          <button class="btn btn-secondary" name="clear_all" value="clear" onclick="clearAll()">Очистить</button>
+          <% end %>
+        </div>
+      </div>   
+      <% if @result %>
+        <div id="result">
+          
+        </div>
+      <% end %>      
     </div>
-    <div class="col-lg-8">
+    <div class="col-lg-8" style="padding: 0;">
       <div id="map" class="map"></div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-12"></div>
   </div>
 </div>
