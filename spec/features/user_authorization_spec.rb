@@ -12,7 +12,7 @@ RSpec.describe 'UserAuthorizations', type: :feature do
       fill_in 'user_email', with: user1.email
       fill_in 'user_password', with: user1.password
     end
-    click_button 'Log in'
+    click_button 'Вход'
     expect(page).to have_text 'Пользователь в сети'
   end
 
@@ -23,7 +23,7 @@ RSpec.describe 'UserAuthorizations', type: :feature do
         fill_in 'user_email', with: user1.email
         fill_in 'user_password', with: 'random_word'
       end
-      click_button 'Log in'
+      click_button 'Вход'
       expect(current_path).to eql '/users/sign_in'
     end
 
@@ -33,7 +33,7 @@ RSpec.describe 'UserAuthorizations', type: :feature do
         fill_in 'user_email', with: ''
         fill_in 'user_password', with: ''
       end
-      click_button 'Log in'
+      click_button 'Вход'
       expect(current_path).to eql '/users/sign_in'
     end
   end

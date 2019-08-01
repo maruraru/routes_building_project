@@ -12,7 +12,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password', with: user1.password
         fill_in 'user_password_confirmation', with: user1.password_confirmation
       end
-      click_button 'Sign up'
+      click_button 'Регистрация'
       expect(page).to have_text 'Пользователь в сети'
     end
   end
@@ -28,8 +28,8 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password', with: user2.password
         fill_in 'user_password_confirmation', with: user2.password_confirmation
       end
-      click_button 'Sign up'
-      expect(page).to have_text 'Sign up'
+      click_button 'Регистрация'
+      expect(page).to have_text 'Регистрация'
     end
 
     it 'has empty email field' do
@@ -40,7 +40,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password', with: user2.password
         fill_in 'user_password_confirmation', with: user2.password_confirmation
       end
-      click_button 'Sign up'
+      click_button 'Регистрация'
       expect(page).to have_text "can't be blank"
     end
 
@@ -52,7 +52,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password', with: ''
         fill_in 'user_password_confirmation', with: user2.password_confirmation
       end
-      click_button 'Sign up'
+      click_button 'Регистрация'
       expect(page).to have_text "can't be blank"
     end
 
@@ -64,7 +64,7 @@ RSpec.describe 'UserRegistrations', type: :feature do
         fill_in 'user_password', with: user2.password
         fill_in 'user_password_confirmation', with: ''
       end
-      click_button 'Sign up'
+      click_button 'Регистрация'
       expect(page).to have_text "can't be blank"
     end
   end
